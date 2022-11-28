@@ -48,9 +48,9 @@ Arranca Airflow para tener acceso desde el puerto 3000 de localhost.
 Arranca Airflow Scheduler para su uso.
 
 ### 8.- Stop-primal-services.sh
-
 Este comando pone fin a la práctica y sirve para parar todos los recursos lanzados en el terminal con start-primal-services.sh. Pausa y elimina los procesos de Kafka, Mongo y Zookeper.
-----------------------
+
+
 # Inicio del escenario manual
 ## Descarga de datos base
 
