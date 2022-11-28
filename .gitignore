@@ -1,7 +1,6 @@
 .DS_Store
 .ipynb_checkpoints
 mongodb
-spark
 hadoop
 mongo-hadoop
 lib/mongo*
@@ -32,3 +31,8 @@ janusgraph
 deep
 data/origin_dest_distances.jsonl
 data/simple_flight_delay_features.jsonl.bz2
+
+kafka_2.12-3.1.2/
+apache-zookeeper-3.7.1-bin/
+/flight_prediction/target/
+/flight_prediction/project/target/config-classes/

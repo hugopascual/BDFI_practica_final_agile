@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  mongo:
+    image: hugopascual/mongo-bdfi
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongo_data:/data/db"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - predictions_net
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    depends_on:
+      - mongo
+    networks:
+      - predictions_net
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  predictions_net:
+    name: predictions_net
+    driver: bridge

@@ -1,0 +1,74 @@
+Collecting Flask (from -r requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/e8/6d/994208daa354f68fd89a34a8bafbeaab26fda84e7af1e35bdaed02b667e6/Flask-1.1.4-py2.py3-none-any.whl
+Collecting beautifulsoup4 (from -r requirements.txt (line 2))
+  Using cached https://files.pythonhosted.org/packages/1c/d9/8c507915ff962b9e854b477b203c171074f59cce9465dac9f71c2b57ebd6/beautifulsoup4-4.9.3-py2-none-any.whl
+Collecting bs4 (from -r requirements.txt (line 3))
+  Using cached https://files.pythonhosted.org/packages/10/ed/7e8b97591f6f456174139ec089c769f89a94a1a4025fe967691de971f314/bs4-0.0.1.tar.gz
+Collecting frozendict (from -r requirements.txt (line 4))
+  Using cached https://files.pythonhosted.org/packages/4e/55/a12ded2c426a4d2bee73f88304c9c08ebbdbadb82569ebdd6a0c007cfd08/frozendict-1.2.tar.gz
+Collecting geopy (from -r requirements.txt (line 5))
+  Using cached https://files.pythonhosted.org/packages/41/4e/a3eb6ac14a9c4344d6f5e66a9457d82cf124daf5c8176cec0a49677b0e03/geopy-1.23.0-py2.py3-none-any.whl
+Collecting ipython (from -r requirements.txt (line 6))
+  Downloading https://files.pythonhosted.org/packages/ce/2c/2849a2b37024a01a847c87d81825c0489eb22ffc6416cac009bf281ea838/ipython-5.10.0-py2-none-any.whl (760kB)
+Collecting kafka-python (from -r requirements.txt (line 7))
+  Downloading https://files.pythonhosted.org/packages/75/68/dcb0db055309f680ab2931a3eeb22d865604b638acf8c914bedf4c1a0c8c/kafka_python-2.0.2-py2.py3-none-any.whl (246kB)
+Collecting matplotlib (from -r requirements.txt (line 8))
+  Downloading https://files.pythonhosted.org/packages/10/5f/10c310c943f29e67976dcc26dccf9305a5a9bc7483e631ee74a0f95aa5b2/matplotlib-2.2.5.tar.gz (36.7MB)
+    Complete output from command python setup.py egg_info:
+    ============================================================================
+    Edit setup.cfg to change the build options
+
+    BUILDING MATPLOTLIB
+                matplotlib: yes [2.2.5]
+                    python: yes [2.7.18 (default, May  3 2020, 22:58:12)  [GCC
+                            8.3.0]]
+                  platform: yes [linux2]
+
+    REQUIRED DEPENDENCIES AND EXTENSIONS
+                     numpy: yes [not found. pip may install it below.]
+          install_requires: yes [handled by setuptools]
+                    libagg: yes [pkg-config information for 'libagg' could not
+                            be found. Using local copy.]
+                  freetype: no  [The C/C++ header for freetype2 (ft2build.h)
+                            could not be found.  You may need to install the
+                            development package.]
+                       png: no  [pkg-config information for 'libpng' could not
+                            be found.]
+                     qhull: yes [pkg-config information for 'libqhull' could not
+                            be found. Using local copy.]
+
+    OPTIONAL SUBPACKAGES
+               sample_data: yes [installing]
+                  toolkits: yes [installing]
+                     tests: no  [skipping due to configuration]
+            toolkits_tests: no  [skipping due to configuration]
+
+    OPTIONAL BACKEND EXTENSIONS
+                    macosx: no  [Mac OS-X only]
+                    qt5agg: no  [PySide2 not found; PyQt5 not found]
+                    qt4agg: no  [PySide not found; PyQt4 not found]
+                   gtk3agg: no  [Requires pygobject to be installed.]
+                 gtk3cairo: no  [Requires cairocffi or pycairo to be installed.]
+                    gtkagg: no  [Requires pygtk]
+                     tkagg: yes [installing; run-time loading from Python Tcl /
+                            Tk]
+                     wxagg: no  [requires wxPython]
+                       gtk: no  [Requires pygtk]
+                       agg: yes [installing]
+                     cairo: no  [cairocffi or pycairo not found]
+                 windowing: no  [Microsoft Windows only]
+
+    OPTIONAL LATEX DEPENDENCIES
+                    dvipng: no
+               ghostscript: no
+                     latex: no
+                   pdftops: no
+
+    OPTIONAL PACKAGE DATA
+                      dlls: no  [skipping due to configuration]
+
+    ============================================================================
+                            * The following required packages can not be built:
+                            * freetype, png
+
+    ----------------------------------------

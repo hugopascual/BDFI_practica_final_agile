@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  web:
+    image: hugopascual/web-bdfi
+    container_name: web
+    ports:
+      - "5000:5000"
+    networks:
+      - predictions_net
+
+networks:
+  predictions_net:
+    name: predictions_net
+    driver: bridge
