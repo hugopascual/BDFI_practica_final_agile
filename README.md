@@ -11,33 +11,52 @@ sudo sh ../installations.sh
 ----------------------
 ## Inicio del escenario con scripts
 
-Para instalar y ejecutar la práctica, se pueden utilizar los scripts de python añadidos a dicha carpeta, donde ahora veremos la funcionalidad de cada uno de ellos:
+Para instalar y ejecutar la práctica, se pueden utilizar los scripts añadidos a dicha carpeta, donde ahora veremos la 
+funcionalidad de cada uno de ellos:
 
 ### 1.- Installations.sh
 
-Realiza la instalación de todos los componentes necesarios para realizar la práctica, con las versiones definidas en el apartado instalación con los correspondientes comandos mencionados. Si no se ha realizado la instalación de las aplicaciones mencionadas, no se puede inicializar la práctica.
+Realiza la instalación de todos los componentes necesarios para realizar la práctica, con las versiones definidas en el
+apartado instalación con los correspondientes comandos mencionados. Si no se ha realizado la instalación de las 
+aplicaciones mencionadas, no se puede inicializar la práctica.
 
 ### 2.- Environment.sh
 
-Realiza la configuracion de variables de entorno necesarias en el repositorio. Realiza la expertación de todas ellas para un funcionamiento correcto en todos los terminales necesarios y especifica los pasos necesarios para ejecutar la práctica. En todos los terminales que se utilicen en la práctica, se tiene que ejecutar previamente este script.
+Realiza la configuración de variables de entorno necesarias en el repositorio. Realiza la exportación de todas ellas
+para un funcionamiento correcto en todos los terminales necesarios y especifica los pasos necesarios para ejecutar 
+la práctica. En todos los terminales que se utilicen en la práctica, se tiene que ejecutar previamente este script. 
+
+La ejecución de este script debe ser mediante source:
+
+```
+source scripts/enviroment.sh
+```
 
 ### 3.- Start-primal-services.sh
 
-Con dicho script comenzamos con la descarga de datos de la práctica, rellenando los datos de vuelos de diferentes años para disponer de la información para nuestra base de datos.
-Posteriormente el comando corre los scripts de Zookeper y Kafka para arracncarlos, y crea el topic 'flight_delay_classification_request'.
+Con dicho script comenzamos con la descarga de datos de la práctica, rellenando los datos de vuelos de diferentes años
+para disponer de la información para nuestra base de datos.
+Posteriormente, el comando corre los scripts de Zookeper y Kafka para arrancarlos, y crea el topic 
+'flight_delay_classification_request' en Kafka.
 
 Inicializa la base de datos en MongoDB e importa en ella las distancias.
-Posteriormente realiza el entrenamiento del modelo a través de PySpark mllib y almacena el modelo en la base de datos.
+Posteriormente, realiza el entrenamiento del modelo a través de PySpark mllib y almacena el modelo en la base de datos.
 
-Por último crea un usuario airflow por defecto con el nombre de uno de los alumnos que realizarón la práctica y una contraseña e inicializa la base de datos en airflow. Finalmente instala el DAG de datos necesarios para el uso de Apache Airflow.
+Tras esto crea un usuario airflow con el nombre de uno de los alumnos que realizaron la práctica y una contraseña 
+e inicializa la base de datos básica de airflow. Finalmente, instala el DAG de datos necesarios para el uso de 
+Apache Airflow.
 
 ### 4.- Spark-app.sh
 
-Arranca la aplicación de predicción de vuelos 'Flight Predicator' a través de spark submit y con los datos almacenados en mongo. Requiere que estén instalados todos los componentes para un correcto funcionamiento del comando. Se usa en vez de utilizar intellIJ para realizar las predicciones y lanzar la aplicacion. (Mejora 1).
+Arranca la aplicación de predicción de vuelos 'Flight Predicator' a través de spark submit y 
+con los datos almacenados en mongo. Requiere que estén instalados todos los componentes para un 
+correcto funcionamiento del comando. Se utiliza spark-submit y no IntellIJ para realizar las predicciones 
+y lanzar la aplicación. (Mejora 1).
 
 ### 5.- Flask.sh
 
-Arranca la aplicación de flask para visualizar la predicción de nuevos vuelos introduccidos por el usuario. Se puede observar a través del puerto 5000 de localhost en un navegador.
+Arranca la aplicación de flask para visualizar la predicción de nuevos vuelos introducidos por el usuario. 
+Se puede observar a través del puerto 5000 de localhost en un navegador.
 
 ### 6.- Airflow-web.sh 
 
@@ -48,13 +67,20 @@ Arranca Airflow para tener acceso desde el puerto 3000 de localhost.
 Arranca Airflow Scheduler para su uso.
 
 ### 8.- Stop-primal-services.sh
-Este comando pone fin a la práctica y sirve para parar todos los recursos lanzados en el terminal con start-primal-services.sh. Pausa y elimina los procesos de Kafka, Mongo y Zookeper.
 
+Este comando pone fin a la práctica y sirve para parar todos los recursos lanzados en el terminal con 
+start-primal-services.sh. Pausa y elimina los procesos de Kafka, Mongo y Zookeper.
+
+### 9.- Clean.sh
+
+Limpia los archivos creados por los diferentes programas como son Zookeeper, Kafka, la base de datos de MongodB y 
+similares para poder arrancar el escenario desde 0.
 
 # Inicio del escenario manual
 ## Descarga de datos base
 
-Ejecutamos el siguiente Script, donde se incluyen los comandos necesarios para realizar la instalación de todas las versiones necesarias
+Ejecutamos el siguiente Script, donde se incluyen los comandos necesarios para realizar la instalación de todas las 
+versiones necesarias
 
 ```
 resources/download_data.sh
@@ -62,7 +88,7 @@ resources/download_data.sh
 
 ## Arrancar Zookeeper y Kafka
 
-Instalar librerias de python
+Instalar librerías de python
 ```
 pip install -r requirements.txt
 ```
@@ -78,12 +104,11 @@ Arrancar Kafka
 ```
 kafka_2.12-3.1.2/bin/kafka-server-start.sh kafka_2.12-3.1.2/config/server.properties
 ```
-
-## Crear un nuevo topic en otra terminal
+Crear un nuevo topic en otra terminal
 ```
 kafka_2.12-3.1.2/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic flight_delay_classification_request
 ```
-Deberia salir un mensaje como:
+Debería salir un mensaje como:
 ```
 Created topic "flight_delay_classification_request".
 ```
@@ -98,14 +123,15 @@ kafka_2.12-3.1.2/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092
 
 ## Importar datos a MongoDB
 
-Arrancar Mongo y comprobar que esta en funcionamiento
+Arrancar Mongo y comprobar que está en funcionamiento
 ```
 sudo systemctl start mongod
 sudo systemctl status mongod
 
 Run import_distances.sh
 ```
-Ojo, aquí se sufre una modificación debido al uso de un comando obsoleto, por ello se utiliza la llamada mongosh en vez de mongo dentro de import_distances.sh.
+Ojo, aquí se sufre una modificación debido al uso de un comando obsoleto, por ello se utiliza la llamada mongosh en 
+vez de mongo dentro de import_distances.sh.
 !!!! No funciona de serie hay que cambiar "mongo" por "mongosh"
 ./resources/import_distances.sh
 
@@ -129,7 +155,7 @@ Se puede hacer a traves de IntellIJ arrancado el main de MakePrediction
 
 Otra forma es compilar con sbt el MakePrediction.scala y arrancarlo con spark-submit
 Para compilar el proyecto, abrir un terminal en el directorio donde se encuentra el src del proyecto
-Ejecutar sbt y en la shell de sbt ejecutar el compile
+Ejecutar sbt y en la shell de sbt ejecutar el compile.
 ```
 sbt
 # En la bash abierta por el anterior comando
@@ -145,11 +171,11 @@ package
 spark-submit --packages org.mongodb.spark:mongo-spark-connector_2.12:3.0.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 flight_prediction/target/scala-2.12/flight_prediction_2.12-0.1.jar
 ```
 
-# Start the prediction request Web Application
+## Start the prediction request Web Application
 
 Crear la variable de entorno al repositorio clonado 
 ```
-export PROJECT_HOME=/home/hugo/Documentos/BDFI/FinalParte1/practica_big_data_2019
+export PROJECT_HOME=/home/hugo/Documentos/BDFI/BDFI_practica_final_agile
 ```
 Arrancar la aplicación de flask 
 ```
@@ -158,34 +184,35 @@ python3 resources/web/predict_flask.py
 # Una vez arrancada se debe poder visitar la dirección
 # http://localhost:5000/flights/delays/predict_kafka
 ```
-Solo para ver que pasa se puede ejecutar las siguientes instrucciones 
-```
-open the JavaScript console. Enter a nonzero departure delay, an ISO-formatted date (I used 2016-12-25, which was in the future at the time I was writing this), a valid carrier code (use AA or DL if you don’t know one), an origin and destination (my favorite is ATL → SFO), and a valid flight number (e.g., 1519), and hit Submit. Watch the debug output in the JavaScript console as the client polls for data from the response endpoint at /flights/delays/predict/classify_realtime/response/.
-```
-Al hacer esto en la consola donde este ejecutando el Spark deberían aparecer trazas nuevas.
+Para comprobar el funcionamiento adecuado se puede seguir las siguientes instrucciones:
 
-# Check the predictions records inserted in MongoDB
+open the JavaScript console. Enter a nonzero departure delay, an ISO-formatted date (I used 2016-12-25, 
+which was in the future at the time I was writing this), a valid carrier code (use AA or DL if you don’t know one), 
+an origin and destination (my favorite is ATL → SFO), and a valid flight number (e.g., 1519), and hit Submit. 
+Watch the debug output in the JavaScript console as the client polls for data from the response endpoint at 
+/flights/delays/predict/classify_realtime/response/.
 
-Comprobar resultados almacenados en MongoDB
-mongosh
-En la shell de mongosh ejecutar
+Al hacer esto en la consola donde esté ejecutando el Spark deberían aparecer trazas nuevas.
+
+## Check the predictions records inserted in MongoDB
+
+Para comprobar que los resultados se almacenan adecuadamente en MongoDB podemos ejecutar en la shell de MongoDB:
 ```
-# !!!! El comando suyo no funciona, hay que quitar el use
+# !!!! El comando suyo no funciona, hay que quitar el segundo 'use'
 use agile_data_science;
 db.flight_delay_classification_response.find();
 ```
 
 ## Entrenar el modelo con Apache Airflow
 
-Apache Airflow 2.1.4 se instala con pip. Se usará SQLite para probar en esta práctica aunque no es 
-recomendable para producción
-PAra instalar las librerías de Apache Airflow:
+Apache Airflow 2.1.4 se instala con pip. Se usará SQLite para probar en esta práctica aunque no es recomendable 
+para producción. Para instalar las librerías de Apache Airflow:
 ```
-pip install -r resources/requirements.txt -c resources/constraints.txt
+pip install -r resources/airflow/requirements.txt
 ```
 Para configurar el entorno de Apache Airflow:
 ```
-export AIRFLOW_HOME=~/airflow
+export AIRFLOW_HOME=$PROJECT_HOME/airflow
 mkdir $AIRFLOW_HOME/dags
 mkdir $AIRFLOW_HOME/logs
 mkdir $AIRFLOW_HOME/plugins
@@ -194,28 +221,37 @@ airflow users create --username hugo --password 1234 --firstname hugo --lastname
 ```
 Arrancar airflow scheduler y webserver:
 ```
-airflow webserver --port 8080
+airflow webserver --port 3000
 airflow scheduler
 
 # Versión web en la siguiente dirección:
-# http://localhost:8080/home
+# http://localhost:3000/home
 ```
 
 The DAG is defined in resources/airflow/setup.py.
-TODO: add the DAG and execute it to train the model (see the official documentation of Apache Airflow to learn how to exectue and add a DAG with the airflow command).
+
+TODO: add the DAG and execute it to train the model (see the official documentation of Apache Airflow to learn how to 
+exectue and add a DAG with the airflow command).
+
 TODO: explain the architecture of apache airflow (see the official documentation of Apache Airflow).
+
 TODO: analyzing the setup.py: what happens if the task fails?, what is the peridocity of the task?
 
-## Para ejecutar el DAG desde el terminal
+### Para ejecutar el DAG desde el terminal
 ```
 airflow tasks test agile_data_science_batch_prediction_model_training pyspark_train_classifier_model 2022-11-22
 ```
 
+# TODO ACTUALIZAR
 ## Despliegue del escenario en Docker
-Por último, se puede observar los avances y comandos a ejecutar para realizar el despliegue en docker. Por falta de tiempo únicamente se ha podido probar el funcionamiento de los contenedores y ajustarlos al uso deseado. Debido a los problemas encontrados, no se ha podido realizar un despliegue entero en docker. Los avances se puede encontrar en el docker-compose y en cada uno de los contenedores establecidos.
+Por último, se puede observar los avances y comandos a ejecutar para realizar el despliegue en docker. Por falta de 
+tiempo únicamente se ha podido probar el funcionamiento de los contenedores y ajustarlos al uso deseado. Debido a 
+los problemas encontrados, no se ha podido realizar un despliegue entero en docker. Los avances se puede encontrar 
+en el docker-compose y en cada uno de los contenedores establecidos.
 
-Para desplegarlo en docker, realizamos la sigguiente configuración:
+Para desplegarlo en docker, realizamos la siguiente configuración:
 ```
+# Limpiar antiguas imagenes de docker y volumenes
 sudo docker-compose down && sudo docker volume prune -f
 sudo docker system prune -fa
 ```

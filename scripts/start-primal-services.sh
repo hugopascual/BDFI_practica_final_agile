@@ -41,6 +41,8 @@ $PROJECT_HOME/resources/import_distances.sh
 # de la aplicacion o posteriormente utilizando el propio DAG de airflow
 python3 $PROJECT_HOME/resources/train_spark_mllib_model.py .
 ##############################################
+# Install airflow with pip
+pip install -r resources/airflow/requirements.txt
 #Create airflow user
 airflow users create --username hugo --password 1234 --firstname hugo --lastname pascual --role Admin --email hugopascual998@gmail.com
 # Init airflow db
