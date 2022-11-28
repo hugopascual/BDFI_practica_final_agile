@@ -4,6 +4,7 @@
 ##############################################
 mkdir logs
 
+mkdir $AIRFLOW_HOME
 mkdir $AIRFLOW_HOME/dags
 mkdir $AIRFLOW_HOME/logs
 mkdir $AIRFLOW_HOME/plugins
@@ -38,14 +39,15 @@ $PROJECT_HOME/resources/import_distances.sh
 # Ejecutar script
 # Ya que se usa Apache Airflow el entrenamiento se puede ejecutar previo al arranque
 # de la aplicacion o posteriormente utilizando el propio DAG de airflow
-# python3 $PROJECT_HOME/resources/train_spark_mllib_model.py .
+python3 $PROJECT_HOME/resources/train_spark_mllib_model.py .
 ##############################################
 #Create airflow user
 airflow users create --username hugo --password 1234 --firstname hugo --lastname pascual --role Admin --email hugopascual998@gmail.com
 # Init airflow db
 airflow db init
 # Install DAG
-python3 $PROJECT_HOME/resources/airflow/setup.py
+cp $PROJECT_HOME/resources/airflow/setup.py $PROJECT_HOME/airflow/dags/setup.py
+python3 $PROJECT_HOME/airflow/dags/setup.py
 ##############################################
 
 

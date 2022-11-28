@@ -36,3 +36,5 @@ kafka_2.12-3.1.2/
 apache-zookeeper-3.7.1-bin/
 /flight_prediction/target/
 /flight_prediction/project/target/config-classes/
+/logs/
+/airflow/

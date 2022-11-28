@@ -17,3 +17,6 @@ sudo systemctl stop mongod
 
 # Clean predictions models
 rm -r $PROJECT_HOME/models
+
+# Clean airflow
+rm -r $PROJECT_HOME/airflow
