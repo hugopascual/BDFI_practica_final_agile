@@ -3,10 +3,11 @@ El Github con el enunciado de la práctica se puede encontrar en el siguiente re
 https://github.com/ging/practica_big_data_2019
 
 ## Instalación de componentes
-Ir al directorio del proyecto de github y ejecutar la instalación
+Clonar el proyecto de github, colocarse en su interior y ejecutar la instalación
 ```
-cd practica_big_data_2019
-sudo sh ../installations.sh
+git clone https://github.com/hugopascual/BDFI_practica_final_agile
+cd BDFI_practica_final_agile
+sudo sh scripts/installations.sh
 ```
 ----------------------
 ## Inicio del escenario con scripts
@@ -76,22 +77,23 @@ start-primal-services.sh. Pausa y elimina los procesos de Kafka, Mongo y Zookepe
 Limpia los archivos creados por los diferentes programas como son Zookeeper, Kafka, la base de datos de MongodB y 
 similares para poder arrancar el escenario desde 0.
 
-# Inicio del escenario manual
-## Descarga de datos base
+# Inicio manual del escenario
+## Instalación y descarga de componentes necesarios
+Tras la instalación de los programas necesarios mediante installations.sh si se desea arrancar el escenario de forma 
+manual se deben seguir los siguientes pasos.
 
-Ejecutamos el siguiente Script, donde se incluyen los comandos necesarios para realizar la instalación de todas las 
-versiones necesarias
-
+Instalar librerías de python
+```
+pip install -r requirements.txt
+```
+Descarga de datos utilizados para el entrenamiento del modelo de predicción
 ```
 resources/download_data.sh
 ```
 
 ## Arrancar Zookeeper y Kafka
 
-Instalar librerías de python
-```
-pip install -r requirements.txt
-```
+
 Arrancar Zookeeper
 ```
 apache-zookeep-3.7.1-bin/bin/zkServer.sh start apache-zookeeper-3.7.1-bin/conf/zoo_sample.cfg
@@ -131,13 +133,11 @@ sudo systemctl status mongod
 Run import_distances.sh
 ```
 Ojo, aquí se sufre una modificación debido al uso de un comando obsoleto, por ello se utiliza la llamada mongosh en 
-vez de mongo dentro de import_distances.sh.
-!!!! No funciona de serie hay que cambiar "mongo" por "mongosh"
-./resources/import_distances.sh
+vez de mongo dentro de import_distances.sh. Si se ha clonado este repositorio y no el padre está corregido.
 
 ## Entrenar y guardar el modelo con PySpark mllib
 
-Primero Seteamos JAVA_HOME
+Primero establecemos JAVA_HOME
 ```
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 ```
@@ -180,17 +180,17 @@ export PROJECT_HOME=/home/hugo/Documentos/BDFI/BDFI_practica_final_agile
 Arrancar la aplicación de flask 
 ```
 python3 resources/web/predict_flask.py
-# !!!! Libreía del python, "joblib" no encontrada. Hay que comentarla
+# !!!! Libreía de python, "joblib" no encontrada, hay que comentarla en el repositorio original
 # Una vez arrancada se debe poder visitar la dirección
 # http://localhost:5000/flights/delays/predict_kafka
 ```
 Para comprobar el funcionamiento adecuado se puede seguir las siguientes instrucciones:
 
-open the JavaScript console. Enter a nonzero departure delay, an ISO-formatted date (I used 2016-12-25, 
+"open the JavaScript console. Enter a nonzero departure delay, an ISO-formatted date (I used 2016-12-25, 
 which was in the future at the time I was writing this), a valid carrier code (use AA or DL if you don’t know one), 
 an origin and destination (my favorite is ATL → SFO), and a valid flight number (e.g., 1519), and hit Submit. 
 Watch the debug output in the JavaScript console as the client polls for data from the response endpoint at 
-/flights/delays/predict/classify_realtime/response/.
+/flights/delays/predict/classify_realtime/response/."
 
 Al hacer esto en la consola donde esté ejecutando el Spark deberían aparecer trazas nuevas.
 
@@ -198,7 +198,7 @@ Al hacer esto en la consola donde esté ejecutando el Spark deberían aparecer t
 
 Para comprobar que los resultados se almacenan adecuadamente en MongoDB podemos ejecutar en la shell de MongoDB:
 ```
-# !!!! El comando suyo no funciona, hay que quitar el segundo 'use'
+# !!!! El comando especificado en el repo oficial es incorrecto, hay que quitar el segundo 'use'
 use agile_data_science;
 db.flight_delay_classification_response.find();
 ```
@@ -242,37 +242,51 @@ TODO: analyzing the setup.py: what happens if the task fails?, what is the perid
 airflow tasks test agile_data_science_batch_prediction_model_training pyspark_train_classifier_model 2022-11-22
 ```
 
-# TODO ACTUALIZAR
-## Despliegue del escenario en Docker
+# Despliegue del escenario usando Docker y Docker Compose
 Por último, se puede observar los avances y comandos a ejecutar para realizar el despliegue en docker. Por falta de 
-tiempo únicamente se ha podido probar el funcionamiento de los contenedores y ajustarlos al uso deseado. Debido a 
-los problemas encontrados, no se ha podido realizar un despliegue entero en docker. Los avances se puede encontrar 
-en el docker-compose y en cada uno de los contenedores establecidos.
+tiempo únicamente se ha podido probar el funcionamiento de algunos contenedores y ajustarlos al uso deseado. Debido a 
+los problemas encontrados, no se ha podido realizar un despliegue entero en docker. 
 
-Para desplegarlo en docker, realizamos la siguiente configuración:
+Los avances se puede encontrar en el docker-compose y en cada uno de los contenedores establecidos. Todos los 
+archivos referidos a esta construcción se encuentran en el directorio "docker".
+
+Para arrancar el escenario ejecutar el siguiente comando desde el directorio "docker" donde se encuentra el fichero 
+docker-compose.yml.
 ```
-# Limpiar antiguas imagenes de docker y volumenes
+sudo docker-compose up -d
+```
+Esto levantará un contenedor de Zookeeper y Kafka que operan conjuntamente. Tras ello levantará dos contenedores uno de
+ellos con MongoDB y otro con Mongo Express. Este último es accesible a traves de http://127.0.0.1:8081/ . Una vez 
+desplegados los contenedores de MongoDB arranca un cluster de Spark con 1 master y un worker. El master de Spark 
+habilita una interfaz web a traves de http://127.0.0.1:8080/ . Para poder realizar las peticiones por parte del cliente
+se despliega un contenedor con el servidor Flask en la dirección http://127.0.0.1:5000/flights/delays/predict_kafka .
+
+También se despliega un contenedor con Airflow aunque este no es funcional. Además, en los contenedores de Spark no 
+se ha conseguido instalar las dependencias de python con pip por lo que no son funcionales, ya que no se puede ejecutar 
+el entrenamiento del modelo de predicción.
+
+Para comprobar que el despliegue ha ido correctamente se pue utilizar
+```
+sudo docker-compose ps
+```
+
+Para poder ejecutar comandos en cualquiera de las máquinas docker
+```
+sudo docker exec -it <nombre_del_contenedor> /bin/bash
+```
+
+Este comando parará el despliegue y borrará los volúmenes locales que ha creado el despliegue.
+```
 sudo docker-compose down && sudo docker volume prune -f
+```
+
+Si se quiere borrar las imágenes descargadas y limpiar la máquina de los restos de docker se puede usar lo siguiente:
+```
 sudo docker system prune -fa
 ```
-```
-sudo docker-compose up -d && sudo docker-compose ps
-sudo docker exec -it mongo-db /bin/bash
-sudo docker exec -it kafka /bin/bash
-sudo docker exec -it spark-master /bin/bash
-```
-```
-sudo docker build -t hugopascual/mongo-bdfi .
-sudo docker push hugopascual/mongo-bdfi
-```
-```
-pip install --no-cache-dir -r requirements.txt
-python3 resources/train_spark_mllib_model.py .
-spark-submit --packages org.mongodb.spark:mongo-spark-connector_2.12:3.0.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 /opt/bitnami/spark/jars/flight_prediction_2.12-0.1.jar
- ```
- 
- 
 
+Además, en se incluyen dos scripts "restart.sh" y "stop.sh" que son reinician el escenario o lo detienen para facilitar 
+la tarea y no tener que escribir los comandos.
 
 
 
