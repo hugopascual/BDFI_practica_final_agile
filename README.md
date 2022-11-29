@@ -203,7 +203,7 @@ use agile_data_science;
 db.flight_delay_classification_response.find();
 ```
 
-#TODO: add the DAG and execute it to train the model (see the official documentation of Apache Airflow to learn how to 
+# TODO: add the DAG and execute it to train the model (see the official documentation of Apache Airflow to learn how to 
 exectue and add a DAG with the airflow command).
 
 ## Entrenar el modelo con Apache Airflow
@@ -233,13 +233,13 @@ airflow scheduler
 
 The DAG is defined in resources/airflow/setup.py.
 
-#TODO: explain the architecture of apache airflow (see the official documentation of Apache Airflow).
+# TODO: explain the architecture of apache airflow (see the official documentation of Apache Airflow).
 
-##Airflow´s General Architecture
+## Airflow´s General Architecture
 
 La siguiente imagen resume como es la arquitectura de Apache Airflow, la cual está también diseñada usando únicamente Python.
 
-[<img src="images/Airflow´s-General-Architecture-168x300.png">]
+<img src="images/Airflow´s-General-Architecture-168x300.png">
 
 Una base de datos de metadatos contiene toda la información de los workflows, sus estados y sus dependencias. Esto está conectado con el scheduler, un proceso que en función de los datos de la base de datos, determina el orden en el que se ejecutara cada tarea y su prioridad. Muy ligado a éste tenemos el executor, que es un proceso de mensajería de colas que determinará que nodo ejecutará cada tarea. Es decir, el scheduler determina el orden de las tareas y el executor quién ejecutara cada una. Y por último tenemos los workers, procesos que ejecutan la lógica de una tarea.
 
@@ -247,27 +247,28 @@ Luego por otro lado tenemos un servidor web que utiliza la información de la ba
 
 Uno de los elementos que más va a influir en el rendimiento de un DAG es el executor. Hay multitud de tipos, a continuación de resumen los 4 más utilizados:
 
-###SequentialExecutor:
+### SequentialExecutor:
 
 Es el más sencillo, ejecuta las tareas en serie y en local.
 
-###LocalExecutor:
+### LocalExecutor:
 
 Muy parecido al anterior, también se ejecuta en local, pero éste permite paralelización.
 
-###CeleryExecutor:
+### CeleryExecutor:
 
 Permite la ejecución de tareas distribuidas utilizando Celery, un módulo de Python utilizado para la gestión de tareas asíncronas y distribuidas. Para este executor ya es necesario una configuración extra, se necesita un sistema de mensajería de colas y, además, tener cada uno de los nodos distribuidos configurado de manera que se puedan ejecutar correctamente las tareas pertinentes.
 
-###KubernetesExecutor:
+### KubernetesExecutor:
 
 Permite la ejecución de tareas haciendo uso de pods de Kubernetes. En este caso el executor interacciona con la API de Kubernetes, y es esta la que se encarga de desplegar un pod para cada una de las tareas, con las características necesarias, y una vez acabado lo destruye e informa al executor del estado final de la tarea.
 
-#TODO: analyzing the setup.py: what happens if the task fails?, what is the peridocity of the task?
+# TODO: analyzing the setup.py: what happens if the task fails?, what is the peridocity of the task?
 
 En caso de que falle el arranque, tendríamos un error en la actualización continua del modelo de predicción, donde no se actualizaría el entrenamiento con los nuevos datos introducidos en la base de datos. Tiene un delay definido de 5 minutos, como se especifica en setup.py
 
 ### Para ejecutar el DAG desde el terminal
+
 ```
 airflow tasks test agile_data_science_batch_prediction_model_training pyspark_train_classifier_model 2022-11-22
 ```
